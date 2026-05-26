@@ -1,0 +1,7 @@
+# Bloquear carpetas de compilación
+[Bb]in/
+[Oo]bj/
+
+# Bloquear configuraciones locales de Visual Studio
+.vs/
+*.user

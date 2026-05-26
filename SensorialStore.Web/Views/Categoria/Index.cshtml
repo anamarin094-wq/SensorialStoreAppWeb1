@@ -1,0 +1,126 @@
+﻿@model List<SensorialStore.DAL.Entities.Categoria>
+
+@{
+    // Definimos el título que se verá en la pestaña del navegador
+    ViewData["Title"] = "Gestión de Categorías";
+}
+
+<div class="container-fluid p-0">
+    <h2 class="mb-4" style="color: #222222; font-weight: 600; font-size: 1.6rem;">Gestión de Categorías</h2>
+
+    <div class="card border-0 shadow-sm" style="background-color: #ffffff; border-radius: 12px; border: 1px solid #efe4e2 !important;">
+
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3" style="border-bottom: 1px solid #efe4e2;">
+            <h5 class="m-0 text-dark" style="font-weight: 600;">Categorías de Maquillaje</h5>
+            <button class="btn" style="background-color: #d78277; color: white; font-weight: 500;" data-bs-toggle="modal" data-bs-target="#modalCrearCat">
+                <i class="fa-solid fa-plus me-1"></i> Agregar Nueva Categoría
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead style="background-color: #faf3f1; color: #555555;">
+                    <tr>
+                        <th class="ps-4" style="padding: 12px 15px;">ID</th>
+                        <th>Nombre de Categoría</th>
+                        <th>Descripción</th>
+                        <th class="text-center" style="width: 120px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold text-secondary">#@item.CategoriaId</td>
+
+                            <td><span class="badge px-3 py-2 rounded-pill" style="background-color: #f7dad5; color: #7d443c; font-weight: 500;">@item.Nombre</span></td>
+
+                            <td class="text-muted small">@item.Descripcion</td>
+
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-link text-secondary p-1" onclick="abrirEditarCat('@item.CategoriaId', '@item.Nombre', '@item.Descripcion')">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+
+                                <form asp-action="Eliminar" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.CategoriaId" />
+                                    <button type="submit" class="btn btn-sm btn-link text-danger p-1" onclick="return confirm('¿Seguro que deseas eliminar esta categoría?')">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCrearCat" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header text-white" style="background-color: #d78277;">
+                <h5 class="modal-title fw-bold">Agregar Nueva Categoría</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Crear" method="post">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Nombre</label>
+                        <input name="Nombre" class="form-control" placeholder="Ej: Labiales, Ojos, Rostro" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Descripción</label>
+                        <textarea name="Descripcion" class="form-control" rows="2" placeholder="Breve descripción..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-sm px-3" style="background-color: #d78277; color: white;">💾 Guardar Categoría</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarCat" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header text-white" style="background-color: #c46f64;">
+                <h5 class="modal-title fw-bold">Modificar Categoría</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Editar" method="post">
+                <input type="hidden" name="CategoriaId" id="editCatId" />
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Nombre de la Categoría</label>
+                        <input name="Nombre" id="editCatNombre" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Descripción</label>
+                        <textarea name="Descripcion" id="editCatDescripcion" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-dark btn-sm px-3">Actualizar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Esta función se ejecuta al darle clic al icono de lápiz de cualquier fila de la tabla
+    function abrirEditarCat(id, nombre, desc) {
+        // Buscamos los inputs del modal de edición por su ID y les inyectamos los datos de la fila seleccionada
+        document.getElementById('editCatId').value = id;
+        document.getElementById('editCatNombre').value = nombre;
+        document.getElementById('editCatDescripcion').value = desc;
+
+        // Muestra de manera visual en la pantalla el modal que acabamos de llenar
+        new bootstrap.Modal(document.getElementById('modalEditarCat')).show();
+    }
+</script>

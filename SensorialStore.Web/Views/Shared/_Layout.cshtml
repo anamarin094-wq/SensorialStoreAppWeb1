@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="~/images/logo.jpeg" />
+    <title>@ViewData["Title"] - Sensorial Store</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        body {
+            background-color: #fcebe2; /* Fondo rosa pastel sutil que envuelve la app */
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow-x: hidden; /* Evita que aparezca una barra de navegación horizontal molesta */
+        }
+
+        /* Contenedor principal que simula una ventana flotante o maqueta de navegador */
+        .browser-mockup {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin: 20px auto;
+            max-width: 1400px;
+            min-height: 85vh;
+        }
+
+        /* Cabecera decorativa superior de la tienda */
+        .store-banner {
+            background-image: url('/images/banner.png');
+            background-size: 100% auto;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 250px;
+            width: 100%;
+            background-color: #f0b5ae;
+        }
+
+        /* Estilo del título principal "Sensorial Store" */
+        .store-logo-text {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            color: #222222;
+            font-size: 2.6rem;
+            font-weight: 500;
+            margin: 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Estilo del subtítulo cursivo de la tienda */
+        .store-subtitle {
+            font-family: 'Brush Script MT', 'Dancing Script', cursive, sans-serif;
+            font-size: 1.4rem;
+            color: #444444;
+            margin: 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Menú lateral izquierdo (Sidebar) */
+        .sidebar {
+            background-color: #ffffff;
+            border-right: 1px solid #f0ded9;
+            min-height: 70vh;
+            padding: 20px;
+        }
+
+        /* Bloque informativo de la marca arriba en el menú lateral */
+        .sidebar-brand-box {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e8d0cb;
+            margin-bottom: 25px;
+        }
+
+        /* Botones de navegación del menú lateral */
+        .sidebar-menu-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #555555;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-align: left;
+            transition: all 0.3s;
+            text-decoration: none; /* Quita la línea de subrayado típica de los links */
+        }
+
+            /* Estilo de los iconos dentro del menú lateral */
+            .sidebar-menu-btn i {
+                margin-right: 12px;
+                font-size: 1.1rem;
+                width: 20px;
+                text-align: center;
+            }
+
+            /* Botón activo: Se pinta automáticamente cuando estás en esa sección */
+            .sidebar-menu-btn.active {
+                background-color: #e5938a;
+                color: #ffffff;
+                font-weight: bold;
+            }
+
+            /* Efecto visual al pasar el mouse por encima de los botones no activos */
+            .sidebar-menu-btn:hover:not(.active) {
+                background-color: #fdf2f0;
+                color: #e5938a;
+            }
+
+        /* Área gris/rosa claro del lado derecho donde se cargan las vistas */
+        .main-content-area {
+            background-color: #fdf8f6;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="browser-mockup">
+
+            <div class="store-banner d-flex flex-column align-items-center justify-content-center position-relative">
+                <h1 class="store-logo-text">Sensorial Store</h1>
+                <p class="store-subtitle">Perfumería y Cosméticos</p>
+            </div>
+
+            <div class="row g-0">
+
+                <div class="col-md-3 col-lg-2.5 sidebar">
+                    <div class="sidebar-brand-box">
+                        <div class="text-muted small" style="font-style: italic;">Sensorial Store</div>
+                        <div class="small text-secondary">Perfumería y Cosméticos</div>
+                    </div>
+
+                    <nav class="nav flex-column">
+                        <a href="@Url.Action("Index", "Home")" class="sidebar-menu-btn @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                            <i class="fa-solid fa-table-cells"></i> Inventario de Maquillaje
+                        </a>
+
+                        <a href="@Url.Action("Index", "Categoria")" class="sidebar-menu-btn @(ViewContext.RouteData.Values["controller"]?.ToString() == "Categoria" ? "active" : "")">
+                            <i class="fa-solid fa-list-ul"></i> Gestión de Categorías
+                        </a>
+
+                        <a href="@Url.Action("Index", "Marca")" class="sidebar-menu-btn @(ViewContext.RouteData.Values["controller"]?.ToString() == "Marca" ? "active" : "")">
+                            <i class="fa-solid fa-tags"></i> Lista de Marcas
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="col-md-9 col-lg-9.5 main-content-area">
+                    @RenderBody()
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,126 @@
+﻿@model List<SensorialStore.DAL.Entities.Marca>
+
+@{
+    // Definimos el título que se mostrará en la pestaña superior del navegador
+    ViewData["Title"] = "Lista de Marcas";
+}
+
+<div class="container-fluid p-0">
+    <h2 class="mb-4" style="color: #222222; font-weight: 600; font-size: 1.6rem;">Lista de Marcas</h2>
+
+    <div class="card border-0 shadow-sm" style="background-color: #ffffff; border-radius: 12px; border: 1px solid #efe4e2 !important;">
+
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3" style="border-bottom: 1px solid #efe4e2;">
+            <h5 class="m-0 text-dark" style="font-weight: 600;">Marcas Disponibles</h5>
+            <button class="btn" style="background-color: #d78277; color: white; font-weight: 500;" data-bs-toggle="modal" data-bs-target="#modalCrearMarca">
+                <i class="fa-solid fa-plus me-1"></i> Agregar Nueva Marca
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead style="background-color: #faf3f1; color: #555555;">
+                    <tr>
+                        <th class="ps-4" style="padding: 12px 15px;">ID</th>
+                        <th>Nombre de la Marca</th>
+                        <th>País de Origen</th>
+                        <th class="text-center" style="width: 120px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold text-secondary">#@item.MarcaId</td>
+
+                            <td><span class="badge px-3 py-2 rounded-pill" style="background-color: #f2e1d8; color: #825b43; font-weight: 500;">@item.Nombre</span></td>
+
+                            <td class="text-muted small">@item.PaisOrigen</td>
+
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-link text-secondary p-1" onclick="abrirEditarMarca('@item.MarcaId', '@item.Nombre', '@item.PaisOrigen')">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+
+                                <form asp-action="Eliminar" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.MarcaId" />
+                                    <button type="submit" class="btn btn-sm btn-link text-danger p-1" onclick="return confirm('¿Seguro que deseas eliminar esta marca?')">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCrearMarca" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header text-white" style="background-color: #d78277;">
+                <h5 class="modal-title fw-bold">Agregar Nueva Marca</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Crear" method="post">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Nombre de la Marca</label>
+                        <input name="Nombre" class="form-control" placeholder="Ej: Maybelline, Vogue, MAC" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">País de Origen</label>
+                        <input name="PaisOrigen" class="form-control" placeholder="Ej: Estados Unidos, Colombia" />
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-sm px-3" style="background-color: #d78277; color: white;">💾 Guardar Marca</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarMarca" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header text-white" style="background-color: #c46f64;">
+                <h5 class="modal-title fw-bold">Modificar Marca</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Editar" method="post">
+                <input type="hidden" name="MarcaId" id="editMarcaId" />
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Nombre de la Marca</label>
+                        <input name="Nombre" id="editMarcaNombre" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">País de Origen</label>
+                        <input name="PaisOrigen" id="editMarcaPais" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-dark btn-sm px-3">Actualizar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Esta función captura los datos de la fila de la tabla cuando presionas el lápiz de edición
+    function abrirEditarMarca(id, nombre, pais) {
+        // Selecciona los inputs del formulario de edición mediante sus IDs y les asigna los valores correspondientes
+        document.getElementById('editMarcaId').value = id;
+        document.getElementById('editMarcaNombre').value = nombre;
+        document.getElementById('editMarcaPais').value = pais;
+
+        // Llama a Bootstrap para inicializar y abrir de forma visual en la pantalla el modal modificado
+        new bootstrap.Modal(document.getElementById('modalEditarMarca')).show();
+    }
+</script>
